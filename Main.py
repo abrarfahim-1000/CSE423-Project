@@ -3,11 +3,6 @@ from OpenGL.GLUT import *
 from OpenGL.GLU import *
 import math
 
-# from CARdraw import *
-# from level0 import *
-# from level1 import *
-# from level2 import *
-# from level3 import *
 
 total_distance = 0.0
 headlight_opacity = 0.5  # Default opacity for headlightsq
