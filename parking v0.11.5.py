@@ -957,14 +957,17 @@ def keyboard_listener(key, x, y):
     # Handle "LEVEL UP!" screen key press
     if game_state == "LEVEL_UP" and (key == b'\r' or key == b'\n'):  # Enter key
         advance_to_next_level()
-    if game_state == "HOME" and key == b'\r':  # Enter key
-        game_state = "TUTORIAL"
-        timer_active = False
+    # if game_state == "HOME" and key == b'\r':  # Enter key
+    #     game_state = "TUTORIAL"
+    #     timer_active = False
 
         # Tutorial -> Gameplay
     if game_state == "TUTORIAL" and key == b'\r':  # Enter key
         game_state = "PLAY"
-        timer_active = True
+        if current_level == 0:
+            timer_active = False  # Freeze timer
+        else:
+            timer_active = True  # Resume timer
         # Camera view toggle
     if key == b'c' or key == b'C':
         if camera_mode == "third_person":
@@ -987,7 +990,7 @@ def keyboard_listener(key, x, y):
 
 
 def keyboard_up_listener(key, x, y):
-    """Handle key release events to track which keys are no longer pressed"""
+    # Handle key release events to track which keys are no longer pressed
     global keys_pressed
 
     # Remove the key from the pressed keys set
@@ -995,45 +998,9 @@ def keyboard_up_listener(key, x, y):
         keys_pressed.remove(key)
 
 
-def special_key_listener(key, x_unused, y_unused):
-    global camera_angle, camera_pos
-
-    if camera_mode == "third_person" and not game_over:
-        rotation = 5
-        height_change = 20
-        radius = 500
-        min_y = 50
-        max_y = 900
-        x, y, z = camera_pos
-
-        if key == GLUT_KEY_LEFT or key == GLUT_KEY_RIGHT:
-            if key == GLUT_KEY_LEFT:
-                camera_angle -= rotation
-            elif key == GLUT_KEY_RIGHT:
-                camera_angle += rotation
-
-            camera_angle = camera_angle % 360
-            rad = math.radians(camera_angle)
-            sin_val = math.sin(rad)
-            cos_val = math.cos(rad)
-            x = radius * sin_val
-            z = radius * cos_val
-
-        elif key == GLUT_KEY_UP:
-            y += height_change
-            if y > max_y:
-                y = max_y
-        elif key == GLUT_KEY_DOWN:
-            y -= height_change
-            if y < min_y:
-                y = min_y
-
-        camera_pos = [x, y, z]
-        glutPostRedisplay()
-
 
 def mouse_listener(button, state, x, y):
-    """Handles mouse click events for both game interaction and menu buttons."""
+    # Handles mouse click events for both game interaction and menu buttons.
     global camera_mode, game_state
 
     if game_state == "HOME" and button == GLUT_LEFT_BUTTON and state == GLUT_DOWN:
@@ -1092,7 +1059,6 @@ def reset_game():
     game_over = False
     frames_since_last_collision = 0
     camera_mode = "third_person"
-    total_distance = 0.0
 
 
 def idle():
@@ -1116,14 +1082,14 @@ def idle():
 
 
 def draw_score_boxes(health, centerX, centerY):
-    """
-    Draws yellow boxes with P representing remaining health points (up to 5)
     
-    Parameters:
-    health - number of health points remaining
-    centerX - center X position for the row of boxes
-    centerY - center Y position for the row of boxes
-    """
+    # Draws yellow boxes with P representing remaining health points (up to 5)
+    
+    # Parameters:
+    # health - number of health points remaining
+    # centerX - center X position for the row of boxes
+    # centerY - center Y position for the row of boxes
+    
     # Draw yellow boxes with P for each health point (up to 5)
     box_size = 60
     spacing = 20
@@ -1160,7 +1126,7 @@ def draw_score_boxes(health, centerX, centerY):
 
 
 def show_screen():
-    """Handles rendering for both home screen and gameplay."""
+    # Handles rendering for both home screen and gameplay.
     global game_state, game_over, fuel, current_level
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
@@ -1316,13 +1282,6 @@ def show_screen():
         # Call the function to draw score boxes
         draw_score_boxes(health, WINDOW_WIDTH // 2, WINDOW_HEIGHT // 2 - 200)
         
-        # Additional text to explain the boxes
-        # glColor3f(1.0, 1.0, 1.0)  # White color
-        # draw_text(WINDOW_WIDTH // 2 - 200, WINDOW_HEIGHT // 2 - 150, "Parking Spots Completed Without Damage")
-        
-        # # Press ESC to exit text
-        # draw_text(WINDOW_WIDTH // 2 - 150, WINDOW_HEIGHT // 2 - 200, "Press ESC to return to Menu")
-        
         glPopMatrix()
         glMatrixMode(GL_PROJECTION)
         glPopMatrix()
@@ -1332,20 +1291,17 @@ def show_screen():
 
 
 def draw_parking_spot(x, y, z, angle=0, occupied=False):
-    """Draws a single parking spot with marked lines on the ground"""
+    # Draws a single parking spot with marked lines on the ground
     width = 200
     length = 425
-    line_width = 5
 
     glPushMatrix()
     glTranslatef(x, y, z)
     glRotatef(angle, 0, 1, 0)
 
     # Draw the parking spot base - using a solid color instead of transparent blend
-    if occupied:
-        glColor3f(0.5, 0.2, 0.2)  # Darker red for occupied spots
-    else:
-        glColor3f(0.8, 0.8, 0.0)
+    
+    glColor3f(0.8, 0.8, 0.0)
   # Darker green for available spots
 
     # Draw the parking spot surface
@@ -1358,10 +1314,7 @@ def draw_parking_spot(x, y, z, angle=0, occupied=False):
 
     # Draw distinctive pattern inside the parking spot (checkered pattern)
     square_size = 30
-    if not occupied:
-        glColor3f(0.3, 0.5, 0.3)  # Slightly different green for the pattern
-    else:
-        glColor3f(0.6, 0.3, 0.3)  # Slightly different red for the pattern
+    glColor3f(0.3, 0.5, 0.3)
 
     for i in range(int(-width / 2), int(width / 2), square_size):
         for j in range(int(-length / 2), int(length / 2), square_size):
@@ -1426,7 +1379,7 @@ def draw_parking_spot(x, y, z, angle=0, occupied=False):
 
 
 def draw_ingameroad(x1, z1, x2, z2, width=280, y=0.5):
-    """Draws a road segment from (x1,z1) to (x2,z2) with given width"""
+    # Draws a road segment from (x1,z1) to (x2,z2) with given width
     # Calculate road direction vector
     dx = x2 - x1
     dz = z2 - z1
@@ -1473,7 +1426,7 @@ def draw_ingameroad(x1, z1, x2, z2, width=280, y=0.5):
 
 
 def draw_traffic_cone(x, y, z):
-    """Draws a traffic cone obstacle"""
+    # Draws a traffic cone obstacle
     cone_height = 40
     base_radius = 15
 
@@ -1497,7 +1450,7 @@ def draw_traffic_cone(x, y, z):
 
 
 def draw_barrier(x, y, z, angle=0):
-    """Draws a road barrier/block"""
+    # Draws a road barrier/block
     barrier_length = 100
     barrier_height = 30
     barrier_width = 25
@@ -1533,7 +1486,7 @@ def draw_barrier(x, y, z, angle=0):
 
 
 def draw_game_environment():
-    """Draw all the parking lot elements: roads, parking spots, parked cars, and obstacles"""
+    # Draw all the parking lot elements: roads, parking spots, parked cars, and obstacles
     global current_level_road, current_level_parking_spots, current_level_parked_cars, current_level_obstacles
 
     for i in current_level_road:
@@ -1565,8 +1518,6 @@ def draw_game_environment():
 
         glPopMatrix()
 
-        adjusted_angle = car["angle"] + 90
-        vehicle_spheres = get_vehicle_spheres(car["pos"], adjusted_angle, car["model"])
 
     # Draw obstacles
     for obstacle in current_level_obstacles:
@@ -1574,8 +1525,6 @@ def draw_game_environment():
             draw_traffic_cone(obstacle["pos"][0], obstacle["pos"][1], obstacle["pos"][2])
         elif obstacle["type"] == "barrier":
             draw_barrier(obstacle["pos"][0], obstacle["pos"][1], obstacle["pos"][2], obstacle["angle"])
-
-        obs_radius = obstacle_radii[obstacle["type"]]
 
 
 def main():
@@ -1587,7 +1536,6 @@ def main():
     glutDisplayFunc(show_screen)
     glutKeyboardFunc(keyboard_listener)
     glutKeyboardUpFunc(keyboard_up_listener)  # Add key release callback
-    glutSpecialFunc(special_key_listener)
     glutMouseFunc(mouse_listener)
     glutIdleFunc(idle)
     glutMainLoop()
