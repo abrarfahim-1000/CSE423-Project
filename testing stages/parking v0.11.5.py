@@ -635,13 +635,11 @@ def check_parking_success():
 def advance_to_next_level():
     global current_level, current_level_parking_spots, current_level_parked_cars
     global current_level_obstacles, player_pos, player_angle, current_level_road, game_state
-    global current_level_time, frame_count, timer_active 
+    global current_level_time, frame_count, timer_active, fuel_depletion_active
 
     # Reset timer for new level
     current_level_time = 0
     frame_count = 0
-    if current_level != 0:
-        timer_active = True
 
     if current_level == 0:
         current_level = 1
@@ -652,6 +650,8 @@ def advance_to_next_level():
         current_level_obstacles = level1_obstacles
         current_level_road = road1
         game_state = "PLAY"  # Resume gameplay
+        timer_active = True  # Ensure timer is activated for level 1
+        fuel_depletion_active = True  # Activate fuel depletion
 
     elif current_level == 1:
         current_level = 2
@@ -662,6 +662,7 @@ def advance_to_next_level():
         current_level_obstacles = level2_obstacles
         current_level_road = road2
         game_state = "PLAY"
+        timer_active = True  # Ensure timer stays active
     elif current_level == 2:
         current_level = 3
         player_pos = player_pos3
@@ -671,6 +672,7 @@ def advance_to_next_level():
         current_level_obstacles = level3_obstacles
         current_level_road = road3
         game_state = "PLAY"
+        timer_active = True  # Ensure timer stays active
     elif current_level == 3:
         game_state = "CONGRATULATIONS"
 
@@ -943,7 +945,7 @@ def update_car_position():
 
 
 def keyboard_listener(key, x, y):
-    global player_pos, player_angle, camera_mode, speed, car_model, car_color, game_over, keys_pressed, game_state, timer_active
+    global player_pos, player_angle, camera_mode, speed, car_model, car_color, game_over, keys_pressed, game_state, timer_active, current_level_time, frame_count, fuel_depletion_active
 
     # Reset game if needed
     if game_over:
@@ -957,18 +959,21 @@ def keyboard_listener(key, x, y):
     # Handle "LEVEL UP!" screen key press
     if game_state == "LEVEL_UP" and (key == b'\r' or key == b'\n'):  # Enter key
         advance_to_next_level()
-    # if game_state == "HOME" and key == b'\r':  # Enter key
-    #     game_state = "TUTORIAL"
-    #     timer_active = False
+    if game_state == "HOME" and key == b'\r':  # Enter key
+        game_state = "TUTORIAL"
+        timer_active = False
 
-        # Tutorial -> Gameplay
+    # Tutorial -> Gameplay
     if game_state == "TUTORIAL" and key == b'\r':  # Enter key
         game_state = "PLAY"
-        if current_level == 0:
-            timer_active = False  # Freeze timer
-        else:
-            timer_active = True  # Resume timer
-        # Camera view toggle
+        if current_level != 0:
+            # Ensure timer is properly set up for level 1
+            timer_active = True
+            current_level_time = 0
+            frame_count = 0
+            fuel_depletion_active = True
+        
+    # Camera view toggle
     if key == b'c' or key == b'C':
         if camera_mode == "third_person":
             camera_mode = "first_person"
@@ -1127,7 +1132,7 @@ def draw_score_boxes(health, centerX, centerY):
 
 def show_screen():
     # Handles rendering for both home screen and gameplay.
-    global game_state, game_over, fuel, current_level
+    global game_state, game_over, fuel, current_level, timer_active
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
     if game_state == "TUTORIAL":
@@ -1177,6 +1182,10 @@ def show_screen():
 
     elif game_state == "PLAY":
         # Draw game screen
+        # Only activate timer in actual levels, not in tutorial
+        if current_level > 0 and not game_over:
+            timer_active = True
+            
         glLoadIdentity()
         setupCamera()
         glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT)
