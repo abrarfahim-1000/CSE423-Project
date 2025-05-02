@@ -2,6 +2,11 @@
 
 Welcome to the **Parking Simulator**, a game built using Python and OpenGL. In this game, players can choose from multiple cars and navigate through 3 exciting levels, aiming to park correctly in the designated spots to complete each level.
 
+## Contributors
+[Samiha Farhan](https://github.com/samihafarhan)
+
+[Radia Rahman](https://github.com/greensod)
+
 ## Features
 
 - Multiple cars to choose from.
