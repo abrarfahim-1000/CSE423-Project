@@ -2,6 +2,7 @@ from OpenGL.GL import *
 from OpenGL.GLUT import *
 from OpenGL.GLU import *
 import math
+
 # from CARdraw import *
 # from level0 import *
 # from level1 import *
@@ -11,6 +12,7 @@ import math
 total_distance = 0.0
 headlight_opacity = 0.5  # Default opacity for headlightsq
 # Car movement physics
+resetcount = 0
 speed = 2
 max_speed = 2
 acceleration = 0.05
@@ -21,6 +23,7 @@ keys_pressed = set()  # Track which keys are currently pressed
 steering_angle = 0  # Current steering angle
 max_steering_angle = 30  # Maximum steering angle
 steering_return_speed = 1.0
+
 
 def draw_car(x, y, z, car_color=(1.0, 0.0, 0.0)):
     global total_distance, steering_angle, speed
@@ -276,7 +279,6 @@ def draw_truck(x, y, z, truck_color=(0.96, 0.96, 0.86)):  # Default color: beige
     glPopMatrix()
     glPopMatrix()
 
-
     # Front-right wheel
     glPushMatrix()
     glColor3f(0.1, 0.1, 0.1)
@@ -429,8 +431,6 @@ def draw_truck(x, y, z, truck_color=(0.96, 0.96, 0.86)):  # Default color: beige
     glutSolidCube(1)
     glPopMatrix()
 
-
-
     # Headlights
     headlight_radius = 5
     headlight_depth = 8
@@ -483,8 +483,7 @@ def draw_truck(x, y, z, truck_color=(0.96, 0.96, 0.86)):  # Default color: beige
 
 
 def draw_bus(x, y, z, bus_color=(0.9, 0.9, 0.1)):
-
-    global  total_distance, steering_angle, speed
+    global total_distance, steering_angle, speed
 
     glPushMatrix()
     glTranslatef(x, y, z)
@@ -664,7 +663,6 @@ def draw_bus(x, y, z, bus_color=(0.9, 0.9, 0.1)):
 
 
 def draw_suv(x, y, z, car_color=(0.0, 0.5, 0.0)):
-
     global total_distance, steering_angle, speed
 
     glPushMatrix()
@@ -911,7 +909,6 @@ def draw_suv(x, y, z, car_color=(0.0, 0.5, 0.0)):
 
 
 def draw_pickup_truck(x, y, z, car_color=(0.7, 0.3, 0.0)):
-
     global total_distance, steering_angle, speed
 
     glPushMatrix()
@@ -1112,7 +1109,6 @@ def draw_pickup_truck(x, y, z, car_color=(0.7, 0.3, 0.0)):
 
 
 def draw_sports_car(x, y, z, car_color=(0.1, 0.1, 0.9)):
-
     global total_distance, steering_angle, speed
 
     glPushMatrix()
@@ -1333,6 +1329,7 @@ def draw_sports_car(x, y, z, car_color=(0.1, 0.1, 0.9)):
 
     glPopMatrix()
 
+
 player_pos0 = [0, 30, 850]
 player_angle0 = 180
 level0_parking_spots = [
@@ -1346,7 +1343,7 @@ level0_obstacles = []
 
 player_pos1 = [850, 30, 850]
 player_angle1 = 270
-road1=[(-850, -640, -850, 990),(-750, 850, 1000, 850)]
+road1 = [(-850, -640, -850, 990), (-750, 850, 1000, 850)]
 
 level1_parked_cars = [
     {"model": "suv", "color": (0.0, 0.5, 0.0), "pos": [-650, 0, -850], "angle": 90},
@@ -1363,23 +1360,23 @@ level1_obstacles = [
     {"type": "cone", "pos": [-1000, 0, 400]},
     {"type": "cone", "pos": [-1000, 0, 650]},
     {"type": "cone", "pos": [-1000, 0, 900]},
-    
+
     {"type": "barrier", "pos": [-700, 0, -550], "angle": 90},
     {"type": "barrier", "pos": [-700, 0, -200], "angle": 90},
     {"type": "barrier", "pos": [-700, 0, 150], "angle": 90},
     {"type": "barrier", "pos": [-700, 0, 500], "angle": 90},
-    
+
     {"type": "cone", "pos": [-700, 0, 690]},
     {"type": "cone", "pos": [-350, 0, 690]},
     {"type": "cone", "pos": [0, 0, 690]},
     {"type": "cone", "pos": [350, 0, 690]},
     {"type": "cone", "pos": [700, 0, 690]},
-    
+
     {"type": "barrier", "pos": [-600, 0, 1000], "angle": 0},
     {"type": "barrier", "pos": [-150, 0, 1000], "angle": 0},
     {"type": "barrier", "pos": [300, 0, 1000], "angle": 0},
     {"type": "barrier", "pos": [750, 0, 1000], "angle": 0},
-    
+
     {"type": "barrier", "pos": [-950, 0, -850], "angle": 90},
     {"type": "barrier", "pos": [-750, 0, -850], "angle": 90}
 ]
@@ -1390,7 +1387,7 @@ level1_parking_spots = [
 
 player_pos2 = [300, 30, 850]
 player_angle2 = 180
-road2=[(300, 1000, 300, 300),(440, 160, -850, 160),(-710, 20, -710, -500),(-850, -500, 550, -500)]
+road2 = [(300, 1000, 300, 300), (440, 160, -850, 160), (-710, 20, -710, -500), (-850, -500, 550, -500)]
 level2_parked_cars = [
     {"model": "suv", "color": (0.0, 0.5, 0.0), "pos": [-300, 30, -250], "angle": 90},
     {"model": "car", "color": (1.0, 0.0, 0.0), "pos": [50, 30, -250], "angle": 90}
@@ -1400,44 +1397,43 @@ level2_obstacles = [
     {"type": "cone", "pos": [150, 0, 950]},
     {"type": "cone", "pos": [150, 0, 700]},
     {"type": "cone", "pos": [150, 0, 450]},
-    
+
     {"type": "barrier", "pos": [450, 0, 900], "angle": 90},
     {"type": "barrier", "pos": [450, 0, 550], "angle": 90},
-    
+
     {"type": "cone", "pos": [350, 0, 0]},
     {"type": "cone", "pos": [50, 0, 0]},
     {"type": "cone", "pos": [-350, 0, 0]},
-    
+
     {"type": "barrier", "pos": [-250, 0, 300], "angle": 0},
     {"type": "barrier", "pos": [-750, 0, 300], "angle": 0},
-    
+
     {"type": "cone", "pos": [-860, 0, 0]},
     {"type": "cone", "pos": [-860, 0, -250]},
     {"type": "cone", "pos": [-860, 0, -500]},
-    
+
     {"type": "barrier", "pos": [-560, 0, -50], "angle": 90},
     {"type": "barrier", "pos": [-560, 0, -300], "angle": 90},
-    
+
     {"type": "cone", "pos": [-800, 0, -700]},
     {"type": "cone", "pos": [-450, 0, -700]},
     {"type": "cone", "pos": [-100, 0, -700]},
     {"type": "cone", "pos": [250, 0, -700]},
-    
+
     {"type": "barrier", "pos": [-150, 0, -350], "angle": 0},
     {"type": "barrier", "pos": [300, 0, -350], "angle": 0},
-    
+
     {"type": "barrier", "pos": [750, 0, -600], "angle": 0},
     {"type": "barrier", "pos": [750, 0, -400], "angle": 0}
 ]
 
 level2_parking_spots = [
-    {"pos": [750,0,-500], "angle": 90, "occupied": False},
+    {"pos": [750, 0, -500], "angle": 90, "occupied": False},
 ]
-
 
 player_pos3 = [800, 30, 825]
 player_angle3 = 180
-road3=[
+road3 = [
     (800, 980, 800, 500),
     (940, 500, -340, 500),
     (-200, 500, -200, -200),
@@ -1460,34 +1456,34 @@ level3_obstacles = [
 
     {"type": "barrier", "pos": [950, 0, 880], "angle": 90},
     {"type": "barrier", "pos": [950, 0, 580], "angle": 90},
-    
+
     {"type": "cone", "pos": [600, 0, 330]},
     {"type": "cone", "pos": [200, 0, 330]},
-    
+
     {"type": "barrier", "pos": [500, 0, 650], "angle": 0},
     {"type": "barrier", "pos": [100, 0, 650], "angle": 0},
     {"type": "barrier", "pos": [-150, 0, 650], "angle": 0},
-    
+
     {"type": "cone", "pos": [-350, 0, 400]},
     {"type": "cone", "pos": [-350, 0, 100]},
     {"type": "cone", "pos": [-350, 0, -150]},
-    
+
     {"type": "barrier", "pos": [-50, 0, 200], "angle": 90},
-    
+
     {"type": "cone", "pos": [-600, 0, -370]},
     {"type": "cone", "pos": [-300, 0, -370]},
     {"type": "cone", "pos": [100, 0, -370]},
-    
+
     {"type": "barrier", "pos": [100, 0, -50], "angle": 0},
     {"type": "barrier", "pos": [400, 0, -50], "angle": 0},
-    
+
     {"type": "barrier", "pos": [650, 0, -100], "angle": 90},
     {"type": "barrier", "pos": [650, 0, -550], "angle": 90},
-    
+
     {"type": "barrier", "pos": [300, 0, -650], "angle": 0},
     {"type": "barrier", "pos": [-150, 0, -650], "angle": 0},
     {"type": "barrier", "pos": [-600, 0, -650], "angle": 0},
-    
+
     {"type": "barrier", "pos": [-950, 0, -850], "angle": 90},
     {"type": "barrier", "pos": [-750, 0, -850], "angle": 90}
 ]
@@ -1623,6 +1619,7 @@ frames_per_second = 192
 frame_count = 0
 timer_active = False
 
+
 # total_distance = 0.0
 
 def distance_3d(pos1, pos2):
@@ -1706,6 +1703,8 @@ def get_vehicle_spheres(pos, angle, model):
         })
 
     return spheres
+
+
 def check_vehicle_collision(pos1, angle1, model1, pos2, angle2, model2, check_sphere=None):
     # Check if two vehicles collide using their sphere-based collision system.
     spheres1 = get_vehicle_spheres(pos1, angle1, model1)
@@ -1719,6 +1718,7 @@ def check_vehicle_collision(pos1, angle1, model1, pos2, angle2, model2, check_sp
             if check_sphere_collision(sphere1['pos'], sphere1['radius'], sphere2['pos'], sphere2['radius']):
                 return True
     return False
+
 
 def draw_text(x, y, text, font=GLUT_BITMAP_HELVETICA_18, scale=1.0):  # all given
     glColor3f(1, 1, 1)
@@ -1748,7 +1748,7 @@ def draw_text(x, y, text, font=GLUT_BITMAP_HELVETICA_18, scale=1.0):  # all give
 
 
 def draw_stroke_text(x, y, text, font=GLUT_STROKE_ROMAN):
-#    Draws 3D stroke font text using an orthographic projection.
+    #    Draws 3D stroke font text using an orthographic projection.
     glColor3f(1, 1, 1)
     glMatrixMode(GL_PROJECTION)
     glPushMatrix()
@@ -1770,9 +1770,8 @@ def draw_stroke_text(x, y, text, font=GLUT_STROKE_ROMAN):
 
 
 def draw_tutorial_text(x, y, text, font=GLUT_STROKE_ROMAN):
-    
     # Draws tutorial text on the screen with a fixed scale of 0.8.
-    
+
     glColor3f(1, 1, 1)  # Set text color to white
     glPushMatrix()
     glTranslatef(x, y, 0)  # Move to the specified position
@@ -1783,6 +1782,7 @@ def draw_tutorial_text(x, y, text, font=GLUT_STROKE_ROMAN):
         glutStrokeCharacter(font, ord(ch))
 
     glPopMatrix()
+
 
 def draw_roads():
     # Draws two vertical ash-colored roads but moves both roads outside.
@@ -2058,6 +2058,7 @@ def draw_boundary():
     glutSolidCube(1)
     glPopMatrix()
 
+
 def draw_player():
     global car_model, car_color
 
@@ -2084,7 +2085,6 @@ def draw_player():
 
 
 def check_parking_success():
-    
     # Check if the car is fully within the bounds of a designated parking spot.
     # Uses AABB collision detection with stricter containment logic.
     global current_level_parking_spots, player_pos, vehicle_size, player_angle
@@ -2113,7 +2113,6 @@ def check_parking_success():
         )
 
         if fully_inside:
-
             return True
 
     return False
@@ -2122,7 +2121,7 @@ def check_parking_success():
 def advance_to_next_level():
     global current_level, current_level_parking_spots, current_level_parked_cars
     global current_level_obstacles, player_pos, player_angle, current_level_road, game_state
-    global current_level_time, frame_count, timer_active 
+    global current_level_time, frame_count, timer_active
 
     # Reset timer for new level
     current_level_time = 0
@@ -2430,11 +2429,12 @@ def update_car_position():
 
 
 def keyboard_listener(key, x, y):
-    global player_pos, player_angle, camera_mode, speed, car_model, car_color, game_over, keys_pressed, game_state, timer_active
+    global resetcount, player_pos, player_angle, camera_mode, speed, car_model, car_color, game_over, keys_pressed, game_state, timer_active
 
     # Reset game if needed
     if game_over:
         if key == b'r' or key == b'R':
+            resetcount+=1
             reset_game()
         return
 
@@ -2448,7 +2448,7 @@ def keyboard_listener(key, x, y):
     #     game_state = "TUTORIAL"
     #     timer_active = False
 
-        # Tutorial -> Gameplay
+    # Tutorial -> Gameplay
     if game_state == "TUTORIAL" and key == b'\r':  # Enter key
         game_state = "PLAY"
         if current_level == 0:
@@ -2485,7 +2485,6 @@ def keyboard_up_listener(key, x, y):
         keys_pressed.remove(key)
 
 
-
 def mouse_listener(button, state, x, y):
     # Handles mouse click events for both game interaction and menu buttons.
     global camera_mode, game_state
@@ -2511,7 +2510,6 @@ def mouse_listener(button, state, x, y):
             camera_mode = "first_person"
         else:
             camera_mode = "third_person"
-
 
     glutPostRedisplay()
 
@@ -2548,41 +2546,22 @@ def reset_game():
     camera_mode = "third_person"
 
 
-def idle():
-    global frame_count, current_level_time, game_over, timer_active
-
-    update_car_position()
-    update_game_state()
-
-    # Update timer if active
-    if timer_active and game_state == "PLAY":
-        frame_count += 1
-        if frame_count >= frames_per_second:
-            current_level_time += 1
-            frame_count = 0
-
-            if current_level_time >= level_time_limit:
-                game_over = True
-                timer_active = False
-
-    glutPostRedisplay()
 
 
 def draw_score_boxes(health, centerX, centerY):
-    
     # Draws yellow boxes with P representing remaining health points (up to 5)
-    
+
     # Parameters:
     # health - number of health points remaining
     # centerX - center X position for the row of boxes
     # centerY - center Y position for the row of boxes
-    
+
     # Draw yellow boxes with P for each health point (up to 5)
     box_size = 60
     spacing = 20
     start_x = centerX - ((min(health, 5) * box_size) + ((min(health, 5) - 1) * spacing)) // 2
     start_y = centerY
-    
+
     for i in range(min(health, 5)):
         # Draw yellow box
         glColor3f(0.8, 0.8, 0.0)  # Yellow color
@@ -2592,7 +2571,7 @@ def draw_score_boxes(health, centerX, centerY):
         glVertex2f(start_x + i * (box_size + spacing) + box_size, start_y - box_size)
         glVertex2f(start_x + i * (box_size + spacing), start_y - box_size)
         glEnd()
-        
+
         # Draw white outline
         glColor3f(1.0, 1.0, 1.0)  # White color
         glLineWidth(2.0)
@@ -2602,18 +2581,19 @@ def draw_score_boxes(health, centerX, centerY):
         glVertex2f(start_x + i * (box_size + spacing) + box_size, start_y - box_size)
         glVertex2f(start_x + i * (box_size + spacing), start_y - box_size)
         glEnd()
-        
+
         # Draw P letter inside box
         glColor3f(0.0, 0.0, 0.0)  # Black color for P
         glPushMatrix()
-        glTranslatef(start_x + i * (box_size + spacing) + box_size/2 - 10, start_y - box_size/2, 0)
+        glTranslatef(start_x + i * (box_size + spacing) + box_size / 2 - 10, start_y - box_size / 2, 0)
         glScalef(0.2, 0.2, 0.2)
         glutStrokeCharacter(GLUT_STROKE_ROMAN, ord('P'))
         glPopMatrix()
 
+
 def show_screen():
     # Handles rendering for both home screen and gameplay.
-    global game_state, game_over, fuel, current_level
+    global game_state, game_over, fuel, current_level, timer_active
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
     if game_state == "TUTORIAL":
@@ -2662,6 +2642,7 @@ def show_screen():
         glMatrixMode(GL_MODELVIEW)
 
     elif game_state == "PLAY":
+        timer_active = True
         # Draw game screen
         glLoadIdentity()
         setupCamera()
@@ -2695,9 +2676,9 @@ def show_screen():
         if game_over:
             glPushMatrix()
             glColor3f(1, 0, 0)
-            glTranslatef(WINDOW_WIDTH//2 - 100, WINDOW_HEIGHT - 500, 0)  # Right-aligned position
+            glTranslatef(WINDOW_WIDTH // 2 - 100, WINDOW_HEIGHT - 500, 0)  # Right-aligned position
             glScalef(0.25, 0.3, 0.25)  # Same scale as health text
-            game_text= "Game Over!"
+            game_text = "Game Over!"
             for ch in game_text:
                 glutStrokeCharacter(GLUT_STROKE_ROMAN, ord(ch))
                 glTranslatef(20, 0, 0)
@@ -2705,7 +2686,7 @@ def show_screen():
 
         # Display current time (will freeze when game_over is True)
         time_left = max(0, level_time_limit - current_level_time)
-        timer_text = f"TIME: {time_left:02d}"
+        timer_text = f"Time: {time_left:02d}"
 
         if current_level > 0:
             glPushMatrix()
@@ -2736,10 +2717,10 @@ def show_screen():
         glLoadIdentity()
 
         # Draw "LEVEL UP!" text
-        if current_level !=0:
+        if current_level != 0:
             draw_stroke_text(WINDOW_WIDTH // 2 - 200, WINDOW_HEIGHT // 2 + 50, "LEVEL UP!")
             draw_stroke_text(WINDOW_WIDTH // 2 - 200, WINDOW_HEIGHT // 2 - 50, "Press Enter")
-            draw_score_boxes(health, WINDOW_WIDTH // 2 , WINDOW_HEIGHT // 2 - 200)
+            draw_score_boxes(health, WINDOW_WIDTH // 2, WINDOW_HEIGHT // 2 - 200)
         else:
             draw_stroke_text(WINDOW_WIDTH // 2 - 400, WINDOW_HEIGHT // 2 + 50, "TUTORIAL COMPLETED!")
             draw_stroke_text(WINDOW_WIDTH // 2 - 525, WINDOW_HEIGHT // 2 - 50, "Press Enter to start the game")
@@ -2762,12 +2743,14 @@ def show_screen():
 
         # Draw "CONGRATULATIONS!" text
         score = f"Score: {health}"
+        resettext=f"Resets: {resetcount}"
         draw_stroke_text(WINDOW_WIDTH // 2 - 350, WINDOW_HEIGHT // 2 + 100, "CONGRATULATIONS!")
         draw_stroke_text(WINDOW_WIDTH // 2 - 150, WINDOW_HEIGHT // 2, score)
-        
+        draw_stroke_text(WINDOW_WIDTH // 2 - 150, WINDOW_HEIGHT // 2 - 70, resettext)
+
         # Call the function to draw score boxes
         draw_score_boxes(health, WINDOW_WIDTH // 2, WINDOW_HEIGHT // 2 - 200)
-        
+
         glPopMatrix()
         glMatrixMode(GL_PROJECTION)
         glPopMatrix()
@@ -2786,9 +2769,9 @@ def draw_parking_spot(x, y, z, angle=0, occupied=False):
     glRotatef(angle, 0, 1, 0)
 
     # Draw the parking spot base - using a solid color instead of transparent blend
-    
+
     glColor3f(0.8, 0.8, 0.0)
-  # Darker green for available spots
+    # Darker green for available spots
 
     # Draw the parking spot surface
     glBegin(GL_QUADS)
@@ -3004,7 +2987,6 @@ def draw_game_environment():
 
         glPopMatrix()
 
-
     # Draw obstacles
     for obstacle in current_level_obstacles:
         if obstacle["type"] == "cone":
@@ -3012,6 +2994,24 @@ def draw_game_environment():
         elif obstacle["type"] == "barrier":
             draw_barrier(obstacle["pos"][0], obstacle["pos"][1], obstacle["pos"][2], obstacle["angle"])
 
+def idle():
+    global frame_count, current_level_time, game_over, timer_active
+
+    update_car_position()
+    update_game_state()
+
+    # Update timer if active
+    if timer_active and game_state == "PLAY":
+        frame_count += 1
+        if frame_count >= frames_per_second:
+            current_level_time += 1
+            frame_count = 0
+
+            if current_level_time >= level_time_limit:
+                game_over = True
+                timer_active = False
+
+    glutPostRedisplay()
 
 def main():
     glutInit()
